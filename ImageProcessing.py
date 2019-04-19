@@ -2,7 +2,6 @@ import numpy as np
 import torch
 from PIL import Image
 import pandas as pd
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 #Read csv
 data = pd.read_csv('SKIN_CANCER_metadata.csv')
