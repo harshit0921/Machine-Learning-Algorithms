@@ -24,8 +24,6 @@ images = torch.zeros(int(len(data['Name'])/batches), pixels+4)
 for j in range(batches):
     #For each image in a batch
     for i in range(int(len(data['Name'])/batches)):
-#        i =0
-#        j =0
         directory = '/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/HAM10000/' + data['Name'][batches*j + i] + '.jpg'
         im = Image.open(directory, 'r')
         pix_val = list(im.getdata())
@@ -38,6 +36,5 @@ for j in range(batches):
         images[i, :] = torch.tensor(pix_val_flat)
     print("Saving file " + str(j))
     #Save the batch file
-#    images = images/255
     np.savetxt('/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/batches/batch' + str(j) + '.csv', images.numpy(), delimiter = ",")
     
