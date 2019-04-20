@@ -3,13 +3,17 @@ import torch
 from PIL import Image
 import pandas as pd
 import sys
+import os
+
+script_location = os.path.dirname(__file__)
 
 #Read csv
-data = pd.read_csv('SKIN_CANCER_metadata.csv')
+data = pd.read_csv(os.path.join(script_location, 'SKIN_CANCER_metadata.csv'))
 
 ##Read an image to get resolution
-directory = '/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/HAM10000/' + data['Name'][0] + '.jpg'
-im = Image.open(directory, 'r')
+file_path = os.path.join(script_location, 'HAM10000\\' + data['Name'][0] + '.jpg')
+print(file_path)
+im = Image.open(file_path, 'r')
 pixels = im.size[0] * im.size[1]
 batches = 100
 
@@ -26,8 +30,9 @@ for j in range(batches):
     for i in range(int(len(data['Name'])/batches)):
 #        i =0
 #        j =0
-        directory = '/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/HAM10000/' + data['Name'][batches*j + i] + '.jpg'
-        im = Image.open(directory, 'r')
+        file_path = os.path.join(script_location, 'HAM10000\\' + data['Name'][batches*j + i] + '.jpg')
+        #directory = '/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/HAM10000/' + data['Name'][batches*j + i] + '.jpg'
+        im = Image.open(file_path, 'r')
         pix_val = list(im.getdata())
         #Flatten the image and convert to grayscale values from RGB
         pix_val_flat = [sum(sets)/3 for sets in pix_val]
@@ -39,5 +44,5 @@ for j in range(batches):
     print("Saving file " + str(j))
     #Save the batch file
 #    images = images/255
-    np.savetxt('/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/batches/batch' + str(j) + '.csv', images.numpy(), delimiter = ",")
+    np.savetxt(os.path.join(script_location, 'batches\\batch' + str(j) + '.csv'), images.numpy(), delimiter = ",")
     
