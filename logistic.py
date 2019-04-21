@@ -6,16 +6,14 @@ from sklearn.preprocessing import StandardScaler
 
 class Logistic():
     def __init__(self):
-        self.first_epoch = True
+        self.theta = np.zeros((self.Xtrain.shape[1], 1))
     
     def train(self, x_train, y_train):
         self.Xtrain = np.concatenate((np.ones((x_train.shape[0], 1)), x_train), axis = 1)
         self.ytrain = y_train[:, np.newaxis]
         self.lamb = self.k_fold_cross_validation(self.Xtrain, self.ytrain, 10)
-        if self.first_epoch:
-            self.theta = np.zeros((self.Xtrain.shape[1], 1))
-            self.first_epoch = False
         self.theta = self.fit(self.Xtrain, self.ytrain, self.theta)
+        return self.theta
         
     def sigmoid(self, x):
         # Activation function used to map any real value between 0 and 1
