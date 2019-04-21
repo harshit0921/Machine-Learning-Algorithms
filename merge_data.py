@@ -27,7 +27,7 @@ def merge():
     x = data.loc[:, features].values
     y = data.loc[:,['Label']].values
     
-    for i in range(1,3):
+    for i in range(1,100):
         data = pd.read_csv(os.path.join(script_location, 'batches/batch' + str(i) + '.csv'), names =l)
         x1 = data.loc[:, features].values
         y1 = data.loc[:,['Label']].values
