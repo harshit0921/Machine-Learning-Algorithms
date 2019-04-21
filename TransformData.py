@@ -15,7 +15,7 @@ def transform(data):
     features.extend(('Age','Male','Female'))
     x = data.loc[:, features].values
     y = data.loc[:,['Label']].values
-    x = StandardScaler().fit_transform(x)
+#    x = StandardScaler().fit_transform(x)
     pca = PCA(n_components =100)
     pc= pca.fit_transform(x)
     
