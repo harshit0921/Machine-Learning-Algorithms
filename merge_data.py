@@ -8,6 +8,7 @@ Created on Sat Apr 20 22:05:25 2019
 
 #from TransformData import transform
 import pandas as pd
+import torch
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
@@ -50,4 +51,13 @@ def merge():
     x_train = pca.transform(x_train)
     x_test = pca.transform(x_test)
     
+    x_train = torch.tensor(x_train, dtype = torch.float32)
+    x_test = torch.tensor(x_test, dtype = torch.float32) 
+    y_train = torch.tensor(y_train, dtype = torch.float32)
+    y_test = torch.tensor(y_test, dtype = torch.float32) 
+    
     return x_train, x_test, y_train, y_test
+
+
+if __name__ == '__main__':
+    merge()

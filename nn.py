@@ -6,8 +6,7 @@ Created on Sat Apr 20 00:50:31 2019
 @author: shivamodeka
 """
 
-from TransformData import transform
-import pandas as pd
+from merge_data import merge
 import torch
 import torch.nn.functional as F
 from torch import autograd, optim, nn
@@ -87,22 +86,9 @@ def RunNN(n, Sl, X_train, y_train, X_test, y_test, activation_func):
     
     
 def main():
-    l = [i for i in range(30000)]
-    l.extend(('Age','Male','Female','Label'))
-    data = pd.read_csv('/Users/shivamodeka/Desktop/Machine-Learning-Algorithms/batches/batch0.csv', names = l)
-    x,y = transform(data)
-    
-    x = torch.tensor(x, dtype = torch.float32)
-    y = torch.tensor(y, dtype = torch.float32) 
-    
+    x_train, x_test, y_train, y_test = merge()
+    d = x_train.shape[1]
     act_func = ['identity', 'sigmoid', 'tanh', 'relu']
-    n, d = x.shape
-    y = y.reshape(n)
-    train_range = int(n * 0.8)
-    x_train = x[0:train_range, :]
-    y_train = y[0:train_range]
-    x_test = x[train_range:n, :]
-    y_test = y[train_range:n]
     Sl = [d, 50, 2]
     for func in act_func:
         print("{} activation function:".format(func))
