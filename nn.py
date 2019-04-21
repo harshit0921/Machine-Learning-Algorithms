@@ -11,10 +11,9 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 from torch import autograd, optim, nn
-#from scipy.io import loadmat
 import torch.utils.data
 
-max_epochs = 1000
+max_epochs = 10000
 
 
 class NeuralNetwork(nn.Module):
@@ -28,9 +27,12 @@ class NeuralNetwork(nn.Module):
         self.fc2 = nn.Linear(in_features = Sl[1], out_features = Sl[2])
         self.layers.append(self.fc1)
         self.layers.append(self.fc2)
-        if (n == 4):
+        if (n > 3):
             self.fc3 = nn.Linear(in_features = Sl[2], out_features = Sl[3])
             self.layers.append(self.fc3)
+        if (n == 5):
+            self.fc4 = nn.Linear(in_features = Sl[3], out_features = Sl[4])
+            self.layers.append(self.fc4)
         self.act_func = self.functions[activation_function]
         
         
@@ -56,13 +58,8 @@ class NeuralNetwork(nn.Module):
             loss = F.cross_entropy(output, y_target)
             loss.backward()
             opt.step()
-        c = 1    
-        for layer in self.layers:
-            print('Layer = {}\nWeights = {}\nBias = {}'.format(c,layer.weight,layer.bias))
-            c+=1
-        print('Last layer activations = {}'.format(output))
         FP = (predict - y_target).nonzero().shape[0]
-        print("Training Classification Error: {}".format(FP/y_target.shape[0]))
+        print("Training Classification Error: {:.2f}".format(FP/y_target.shape[0]))
         
         if (self.n == 3):
             return self.fc1.weight, self.fc2.weight, self.fc1.bias, self.fc2.bias, output
@@ -78,15 +75,15 @@ class NeuralNetwork(nn.Module):
         with torch.no_grad():
             y_output = self(X_input)
         
-        _, prediction = y_output.max(1)
+        prediction = y_output.max(1)[1]
         FP = (prediction - y_target).nonzero().shape[0]
-        print("Test Classification Error: {}\n".format(FP/(y_target.shape[0])))
+        print("Test Classification Error: {:.2f}\n".format(FP/(y_target.shape[0])))
         
         
 def RunNN(n, Sl, X_train, y_train, X_test, y_test, activation_func):
     network = NeuralNetwork(n, Sl = Sl, activation_function = activation_func)
-    network.train(X_train.transpose(0,1), y_train)
-    network.predict(X_test.transpose(0,1), y_test)
+    network.train(X_train, y_train)
+    network.predict(X_test, y_test)
     
     
 def main():
@@ -96,16 +93,20 @@ def main():
     x,y = transform(data)
     
     x = torch.tensor(x, dtype = torch.float32)
-    y = torch.tensor(y, dtype = torch.float32)
+    y = torch.tensor(y, dtype = torch.float32) 
     
-    act_func = 'sigmoid'
-    n = x.shape[1]
+    act_func = ['identity', 'sigmoid', 'tanh', 'relu']
+    n, d = x.shape
+    y = y.reshape(n)
     train_range = int(n * 0.8)
     x_train = x[0:train_range, :]
-    y_train = y[0:train_range, :]
+    y_train = y[0:train_range]
     x_test = x[train_range:n, :]
-    y_test = y[train_range:n, :]
-    Sl = [n, 50, 10, 2]
-    RunNN(4, Sl, x_train, y_train, x_test, y_test, act_func)
+    y_test = y[train_range:n]
+    Sl = [d, 50, 2]
+    for func in act_func:
+        print("{} activation function:".format(func))
+        print(Sl)
+        RunNN(len(Sl), Sl, x_train, y_train, x_test, y_test, func)
         
 main()
