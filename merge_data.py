@@ -27,7 +27,7 @@ def merge():
     x = data.loc[:, features].values
     y = data.loc[:,['Label']].values
     
-    for i in range(1,100):
+    for i in range(1,3):
         data = pd.read_csv(os.path.join(script_location, 'batches/batch' + str(i) + '.csv'), names =l)
         x1 = data.loc[:, features].values
         y1 = data.loc[:,['Label']].values
@@ -36,7 +36,8 @@ def merge():
         
     x_train, x_test, y_train, y_test = train_test_split( x, y, test_size=1/5.0, random_state=0)
     
-    print(x_train.shape, y_train.shape)
+    y_train = y_train.flatten()
+    y_test = y_test.flatten()
     
     scale = StandardScaler()
     
