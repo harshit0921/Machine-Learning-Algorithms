@@ -88,7 +88,8 @@ def RunNN(n, Sl, X_train, y_train, X_test, y_test, activation_func):
 def main():
     x_train, x_test, y_train, y_test = merge()
     d = x_train.shape[1]
-    act_func = ['identity', 'sigmoid', 'tanh', 'relu']
+    act_func = ['sigmoid']
+#    act_func = ['identity', 'sigmoid', 'tanh', 'relu']
     Sl = [d, 50, 2]
     for func in act_func:
         print("{} activation function:".format(func))
